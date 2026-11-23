@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="网站 SEO 排查与优化操作指南：技术 SEO、抓取索引、页面结构、性能、内容、转化与验收。">
+  <title>Website SEO Audit Guide · 网站 SEO 排查操作指南</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+ <header class="topbar">
+  <button id="menuBtn" class="icon-btn mobile-only" aria-label="打开导航" aria-expanded="false">☰</button>
+  <a class="brand" href="#start"><span class="brandmark">◈</span><span>SEO <b>Audit Guide</b><small>网站 SEO 排查操作指南</small></span></a>
+  <div class="top-actions"><span class="version">VERSION 1.1</span><button id="themeBtn" class="icon-btn" title="切换主题" aria-label="切换主题">◐</button><a class="icon-btn github" href="https://github.com" target="_blank" rel="noopener noreferrer" title="GitHub">↗</a></div>
+ </header>
+ <div class="shell">
+  <aside id="sidebar" class="sidebar"><div class="side-head"><span>GUIDE / CONTENTS</span><button id="closeMenu" class="icon-btn mobile-only" aria-label="关闭导航">×</button></div><div class="side-search"><span>⌕</span><input type="search" id="searchInput" placeholder="搜索检查项 / 工具 / 问题…" autocomplete="off"><kbd>/</kbd></div><nav id="nav" aria-label="章节导航"></nav><div class="sidebar-foot"><span class="status-dot"></span>静态网页 · 本地进度保存<br><small>不上传你的审计数据</small></div></aside>
+  <main class="main" id="main">
+   <div class="breadcrumb"><span>DOCUMENTATION</span><span>/</span><span id="crumb">快速开始</span></div>
+   <section class="hero"><div class="hero-content"><span class="eyebrow"><span class="mini-dot"></span> PRACTICAL SEO OPERATIONS</span><h1 id="pageTitle">网站 SEO 排查操作指南</h1><p id="pageDesc">从发现异常到核验证据，再到整改验收。将零散的 SEO 检查，变成可以持续复用的工作流程。</p><div class="hero-actions"><button class="primary-btn" id="startBtn">开始排查 <span>→</span></button><button class="ghost-btn" id="printBtn">打印当前指南 ⎙</button></div></div><div class="hero-grid" aria-hidden="true"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span></div></section>
+   <section class="summary" aria-label="指南统计"><div class="stat"><span id="totalCount">—</span><small>检查项目</small></div><div class="stat"><span id="completeCount">0</span><small>已完成</small></div><div class="stat"><span id="sectionCount">9</span><small>指南章节</small></div><div class="stat progress-stat"><div class="stat-title"><strong id="percent">0%</strong><small>本地完成进度</small></div><div class="progress"><div id="progressFill"></div></div></div></section>
+   <section class="toolbar"><div><span class="kicker" id="listKicker">CHECKLIST</span><h2 id="listTitle">从这里开始</h2><p id="listDesc">建议按照顺序检查。每项都有操作步骤、判断标准和验收方式。</p></div><div class="tool-actions"><select id="priorityFilter" aria-label="优先级筛选"><option value="all">全部优先级</option><option value="P1">P1 · 优先检查</option><option value="P2">P2 · 持续完善</option></select><button id="resetBtn" class="text-btn">重置勾选</button></div></section>
+   <div class="results" id="resultText" aria-live="polite"></div>
+   <div id="cards" class="cards"></div>
+   <section class="guide-end"><h2>如何使用这份指南？</h2><div class="end-grid"><div><b>① 检查</b><p>根据工具和步骤找到证据，不依据单一评分下结论。</p></div><div><b>② 判定</b><p>区分“正常”“疑似异常”和“已确认问题”，评估页面重要性。</p></div><div><b>③ 复测</b><p>整改前后保留 URL、截图、日期与验收记录。</p></div></div><p class="disclaimer">提示：指南适用于网站初步 SEO 审计。Google 官方文档、工具版本和实际业务条件发生变化时，应重新核验。此处的 P1/P2 为内部工作优先级，并非搜索引擎评级。</p></section>
+   <footer class="footer">Website SEO Audit Guide <span>© 2026 · A maintainable static documentation project</span></footer>
+  </main>
+ </div>
+ <div id="overlay" class="overlay" hidden></div><script src="assets/js/app.js" defer></script>
+</body>
+</html>

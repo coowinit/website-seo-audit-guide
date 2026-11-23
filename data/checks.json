@@ -1,0 +1,640 @@
+[
+  {
+    "id": "scope",
+    "section": "start",
+    "title": "确定审计目标与证据等级",
+    "priority": "P1",
+    "duration": "5 分钟",
+    "tools": [
+      "浏览器",
+      "项目需求"
+    ],
+    "why": "先界定是快速初评、技术专项还是增长审计，防止将抽样结果描述为全站故障。",
+    "steps": [
+      "明确目标域名、目标市场、重点产品及是否有 GSC/GA4 权限。",
+      "记录检查时间、工具版本、设备及测试环境。",
+      "把发现标记为已确认、合理怀疑或待验证；区分第一方数据和第三方估算。"
+    ],
+    "normal": "检查范围清晰，报告中的每项结论均能追溯到证据。",
+    "warning": "没有 GSC 不能确认 Google 实际收录；Semrush 流量是估算，不是 GA4 实际访问。",
+    "fix": "为每条问题记录 URL、证据来源、影响范围、优先级、建议动作和验收方法。",
+    "verify": "报告顶部写明范围、日期、限制条件。",
+    "example": "Roshan 的 Semrush 历史趋势显示下滑，但原因必须结合 GSC 验证。",
+    "links": [
+      {
+        "label": "Google Search Console",
+        "url": "https://search.google.com/search-console"
+      }
+    ]
+  },
+  {
+    "id": "redirect",
+    "section": "foundation",
+    "title": "域名访问与重定向",
+    "priority": "P1",
+    "duration": "5 分钟",
+    "tools": [
+      "浏览器",
+      "Screaming Frog"
+    ],
+    "why": "避免 www / 非 www、HTTP / HTTPS 的正式网址相互冲突。",
+    "steps": [
+      "依次访问 HTTP、HTTPS、www、非 www 四种首页形式。",
+      "检查跳转后是否统一到一个正式网址，并记录最终状态码。",
+      "对典型产品 URL 重复测试，不只检查首页。"
+    ],
+    "normal": "非正式 URL 通过永久重定向到最终规范 URL；内部链接使用正式网址。",
+    "warning": "首页跳转正常不代表每个产品 URL 也正常；不要仅凭浏览器地址栏判断跳转类型。",
+    "fix": "统一服务器或 CDN 的重定向策略，消除重定向链，更新内部链接。",
+    "verify": "检查 301/308 和最终 200，并确认 Sitemap、Canonical 一致。",
+    "example": "Roshan 部分 www 产品页的 Canonical 指向非 www，需要核对最终跳转路径。"
+  },
+  {
+    "id": "robots",
+    "section": "foundation",
+    "title": "robots.txt 规则检查",
+    "priority": "P1",
+    "duration": "5 分钟",
+    "tools": [
+      "浏览器",
+      "Screaming Frog",
+      "GSC"
+    ],
+    "why": "检查关键页面和渲染必需资源是否遭到误屏蔽。",
+    "steps": [
+      "打开 https://example.com/robots.txt，查看 User-agent、Disallow、Allow 与 Sitemap。",
+      "抽查核心产品 URL 和静态资源路径是否受到规则影响。",
+      "用 Screaming Frog 识别 Blocked by robots.txt，并按 HTML、JS、CSS、图片分别分类。"
+    ],
+    "normal": "重要公开页面可被抓取，敏感或无价值路径按实际需求限制。",
+    "warning": "Disallow 不是 noindex；被屏蔽的 URL 仍可能被索引。不要为了隐藏敏感内容只依赖 robots.txt。",
+    "fix": "移除误屏蔽规则并结合 GSC 测试；对 Next.js 等站点重点评估 /_next/ 静态资源。",
+    "verify": "验证规则生效、页面渲染和抓取正常。",
+    "example": "Roshan 的 /_next/ 受到规则限制，需确认搜索引擎渲染资源是否受影响。",
+    "links": [
+      {
+        "label": "Google robots.txt 说明",
+        "url": "https://developers.google.com/search/docs/crawling-indexing/robots/intro"
+      }
+    ]
+  },
+  {
+    "id": "sitemap",
+    "section": "foundation",
+    "title": "XML Sitemap 检查",
+    "priority": "P1",
+    "duration": "5 分钟",
+    "tools": [
+      "浏览器",
+      "GSC",
+      "Screaming Frog"
+    ],
+    "why": "辅助搜索引擎发现需要收录的重要规范 URL。",
+    "steps": [
+      "打开 Sitemap 地址，检查是否为有效 XML，页面列表能否被正确解析。",
+      "核对其中 URL 是否为可访问的正式规范网址，避免 3xx、4xx、noindex。",
+      "查看 GSC 的 Sitemap 提交、读取和处理结果。"
+    ],
+    "normal": "Sitemap 可解析、URL 与规范域名一致、重要页面完整收录于清单。",
+    "warning": "浏览器显示没有 XML 样式不等于无效；网页显示为连续文字也需结合 HTTP Content-Type 和解析结果判断。",
+    "fix": "修正生成器、响应头与 URL 列表；更新后重新提交 GSC。",
+    "verify": "XML 解析成功；GSC 没有明显读取错误。",
+    "example": "Evodek 的 Sitemap 页面显示为连续文字，应验证实际 XML 与 GSC 读取情况。",
+    "links": [
+      {
+        "label": "Sitemaps 官方说明",
+        "url": "https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview"
+      }
+    ]
+  },
+  {
+    "id": "status",
+    "section": "indexing",
+    "title": "HTTP 状态码与可抓取性",
+    "priority": "P1",
+    "duration": "8 分钟",
+    "tools": [
+      "Screaming Frog",
+      "GSC"
+    ],
+    "why": "重要页面不应依赖错误或无法访问的响应。",
+    "steps": [
+      "Screaming Frog → Response Codes 筛选 3xx、4xx、5xx。",
+      "先用 Content Type = text/html 分类，避免将资源请求与页面混在一起。",
+      "核实有流量的落地页是否异常，并排查内部链接指向重定向或错误地址。"
+    ],
+    "normal": "重要 HTML 页面返回预期的 200，必要跳转有明确目的。",
+    "warning": "软件中的状态码 0 可能是 robots 屏蔽或抓取未完成，不等于服务器 HTTP 0。",
+    "fix": "修复站内无效链接、错误响应和重定向链。",
+    "verify": "复爬重要 URL，检查 GSC 抓取结果。"
+  },
+  {
+    "id": "canonical",
+    "section": "indexing",
+    "title": "Canonical 规范网址",
+    "priority": "P1",
+    "duration": "10 分钟",
+    "tools": [
+      "Screaming Frog",
+      "浏览器源码",
+      "GSC"
+    ],
+    "why": "正确告诉搜索引擎哪些重复或相似 URL 应作为首选网址。",
+    "steps": [
+      "Screaming Frog → Canonicals，筛选 Missing、Canonicalised、Non-Indexable Canonical。",
+      "逐条对照抓取 URL、Canonical 目标和最终重定向后的地址。",
+      "在 GSC URL Inspection 中对关键产品页比较用户声明和 Google 选择的规范 URL。"
+    ],
+    "normal": "重要独立页面使用预期规范 URL；相似或变体页面依据真实内容策略规范化。",
+    "warning": "Canonicalised 不必然是错误；Canonical 是信号而不是强制指令。",
+    "fix": "统一 www、内部链接、Sitemap、canonical；避免 canonical 指向非预期的跳转页。",
+    "verify": "复爬并核对源码与 GSC 的规范网址判断。",
+    "example": "Roshan 一批 www 产品页 Canonical 指向非 www，但还须检查产品 URL 是否重定向。",
+    "links": [
+      {
+        "label": "Google Canonical 指南",
+        "url": "https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls"
+      }
+    ]
+  },
+  {
+    "id": "indexability",
+    "section": "indexing",
+    "title": "可索引性与 GSC 收录",
+    "priority": "P1",
+    "duration": "10 分钟",
+    "tools": [
+      "Screaming Frog",
+      "GSC"
+    ],
+    "why": "分清可被抓取、允许索引和 Google 实际已索引三个不同概念。",
+    "steps": [
+      "筛选重要 HTML 页的 Indexability、Meta Robots 和 X-Robots-Tag。",
+      "检查 GSC 页面索引报告，抽查重要分类与产品 URL。",
+      "针对未收录页核查规范网址、重复内容、抓取情况以及是否具备独立价值。"
+    ],
+    "normal": "重要落地页可抓取、允许索引，且在 GSC 中有合理的收录表现。",
+    "warning": "Screaming Frog 显示 Indexable 不代表已被 Google 收录。",
+    "fix": "针对具体未索引原因优化，不对所有未收录 URL 采取同一处理。",
+    "verify": "GSC URL Inspection 与后续索引变化。"
+  },
+  {
+    "id": "render",
+    "section": "indexing",
+    "title": "JavaScript 渲染对照",
+    "priority": "P1",
+    "duration": "12 分钟",
+    "tools": [
+      "Screaming Frog",
+      "浏览器源码",
+      "GSC"
+    ],
+    "why": "识别服务器原始 HTML 与渲染后的页面元素是否一致。",
+    "steps": [
+      "先在 Text Only 模式抓取并保存 HTML 元数据。",
+      "在具备许可与环境的情况下切换 JavaScript Rendering 对照抓取。",
+      "比较 Title、H1、正文、产品链接、Canonical 和页面可访问性。"
+    ],
+    "normal": "重要内容和链接能够被合理获取，渲染结果与预期一致。",
+    "warning": "Next.js 页面出现 Outside head 警告时，应先核实源码结构和爬虫解析差异，避免过早断言故障。",
+    "fix": "调整框架元数据输出和渲染策略，避免必需 JS/CSS 被不当阻止。",
+    "verify": "GSC 实时测试及渲染 HTML 对照。"
+  },
+  {
+    "id": "title",
+    "section": "onpage",
+    "title": "Title 与 Meta Description",
+    "priority": "P1",
+    "duration": "8 分钟",
+    "tools": [
+      "Screaming Frog",
+      "SERP"
+    ],
+    "why": "让每个重要落地页准确呈现主题和搜索价值。",
+    "steps": [
+      "在 Page Titles、Meta Description 分别筛选 Missing 与 Duplicate。",
+      "按页面类型审查产品分类、详情、博客是否覆盖对应搜索意图。",
+      "检查过长或过短的提示，但不要机械按照固定字符数判定失败。"
+    ],
+    "normal": "标题清晰、独特、与内容匹配；描述真实简洁，有助于点击。",
+    "warning": "描述长度不是 Google 排名的硬性合格标准，Google 也可能重写搜索摘要。",
+    "fix": "优先修订高价值页面的重复、泛化与缺失内容。",
+    "verify": "工具复爬，结合 GSC CTR 与搜索查询复盘。"
+  },
+  {
+    "id": "headings",
+    "section": "onpage",
+    "title": "H1 / H2 标题层级",
+    "priority": "P2",
+    "duration": "8 分钟",
+    "tools": [
+      "Screaming Frog",
+      "浏览器源码"
+    ],
+    "why": "明确页面主题和内容逻辑。",
+    "steps": [
+      "筛选 H1 Missing、Multiple、Duplicate；注意 H1-2 是第二个 H1，并不是 H2。",
+      "检查重点页面标题是否明确表达核心主题。",
+      "单独切换 H2 面板审查次级章节结构。"
+    ],
+    "normal": "重要页面有清晰主标题，H2 与章节主题对应。",
+    "warning": "多个 H1 并非自动违规；判断重点是语义清晰、结构合理。",
+    "fix": "将泛化的 Product Detail 文案降为普通文本，以实际产品名称充当主 H1。",
+    "verify": "复爬 H1/H2 并检查渲染结构。",
+    "example": "Roshan 的部分产品页重复使用 Product Detail H1，且另有产品名称 H1。"
+  },
+  {
+    "id": "images",
+    "section": "onpage",
+    "title": "图片 ALT 与资源 SEO",
+    "priority": "P2",
+    "duration": "8 分钟",
+    "tools": [
+      "Screaming Frog",
+      "浏览器"
+    ],
+    "why": "帮助理解有意义的产品图片，并保持可访问性。",
+    "steps": [
+      "进入 Images 检查 Missing Alt Text、图片大小及加载方式。",
+      "区分产品信息图片与纯装饰图片：装饰图可保留空 alt。",
+      "检查主图文件名、尺寸、srcset、压缩格式和加载优先级。"
+    ],
+    "normal": "重要图片有符合场景的描述，资源大小与实际显示用途匹配。",
+    "warning": "空 alt 不一定是错误；图片的 alt 不应机械堆叠关键词。",
+    "fix": "为信息图片写真实描述；优化超大图和不必要的图片下载。",
+    "verify": "图片抽样检查与性能复测。"
+  },
+  {
+    "id": "cwv",
+    "section": "performance",
+    "title": "Core Web Vitals 与首屏加载",
+    "priority": "P1",
+    "duration": "10 分钟",
+    "tools": [
+      "PageSpeed Insights",
+      "Chrome DevTools"
+    ],
+    "why": "识别真实用户体验和实验室加载瓶颈。",
+    "steps": [
+      "分别运行手机、电脑端 PageSpeed Insights。",
+      "优先查看真实用户数据的 LCP、INP、CLS；若无则注明样本不足。",
+      "查看实验室 LCP 元素、关键请求链、图片传输、JS 阻塞和缓存建议。"
+    ],
+    "normal": "良好阈值一般为 LCP ≤ 2.5s、INP ≤ 200ms、CLS ≤ 0.1（75 分位真实用户数据）。",
+    "warning": "Lighthouse 单次评分波动较大，不直接等同于真实用户指标。",
+    "fix": "先解决首屏主图、资源依赖与长任务，再做小优化。",
+    "verify": "同条件多次测试，并跟踪真实用户指标变化。",
+    "example": "Roshan 手机端实验室 LCP 9.9 秒，桌面端 0.6 秒；应优先排查移动端瓶颈。",
+    "links": [
+      {
+        "label": "PageSpeed Insights",
+        "url": "https://pagespeed.web.dev/"
+      }
+    ]
+  },
+  {
+    "id": "intent",
+    "section": "content",
+    "title": "搜索意图与关键词地图",
+    "priority": "P1",
+    "duration": "15 分钟",
+    "tools": [
+      "GSC",
+      "Semrush",
+      "SERP"
+    ],
+    "why": "让首页、产品分类、产品详情和博客各自覆盖明确的搜索需求。",
+    "steps": [
+      "按市场与语言识别主要非品牌关键词，分类为信息、比较、商业与交易意图。",
+      "建立关键词 → 目标 URL 映射，查看是否存在页面主题重叠。",
+      "对比 GSC 查询与落地页表现，明确新增、更新或合并内容的机会。"
+    ],
+    "normal": "重要商业关键词有对应落地页，内容能够回答用户实际问题。",
+    "warning": "工具估算不能代替 GSC 实际点击数据；关键词多不代表有效询盘多。",
+    "fix": "调整内容结构与内链，将技术资料、案例、产品和 FAQ 联成主题集群。",
+    "verify": "比较搜索展示、点击、排名和有效询盘变化。"
+  },
+  {
+    "id": "links",
+    "section": "content",
+    "title": "内部链接与页面层级",
+    "priority": "P2",
+    "duration": "10 分钟",
+    "tools": [
+      "Screaming Frog"
+    ],
+    "why": "确保高价值页面容易被发现并获得合理的上下文链接。",
+    "steps": [
+      "查看 Crawl Depth、Inlinks、Outlinks、Anchor Text。",
+      "检查重要产品页的导航可达性和博客到产品的实际链接。",
+      "识别孤立页线索、无锚文本链接和死链。"
+    ],
+    "normal": "重要页面有明确且相关的内部链接。",
+    "warning": "点击深度大于 3 并非绝对违规；内链数量更多不等于质量更好。",
+    "fix": "在相关内容上下文中加入自然链接，修复无效导航。",
+    "verify": "复爬并检查重要 URL 的入链来源。"
+  },
+  {
+    "id": "backlinks",
+    "section": "competition",
+    "title": "外链质量与竞品差距",
+    "priority": "P2",
+    "duration": "15 分钟",
+    "tools": [
+      "Semrush",
+      "GSC"
+    ],
+    "why": "了解品牌传播和自然搜索竞争环境。",
+    "steps": [
+      "查看外链来源域、目标页面、锚文本、相关性和近期变化。",
+      "对比主要竞争网站的内容主题、覆盖页面与搜索词。",
+      "优先评估自然获得的行业与客户相关链接。"
+    ],
+    "normal": "外链来源合理、有业务相关性，增长与内容发展相匹配。",
+    "warning": "Authority Score、DR 等属于第三方指标，不是 Google 的官方站点评分。",
+    "fix": "通过真实案例、技术资料、行业合作争取引用，避免购买低质量链接。",
+    "verify": "长期跟踪相关引荐、自然搜索和业务转化。"
+  },
+  {
+    "id": "conversion",
+    "section": "conversion",
+    "title": "询盘、表单与转化追踪",
+    "priority": "P1",
+    "duration": "10 分钟",
+    "tools": [
+      "浏览器",
+      "GA4"
+    ],
+    "why": "SEO 最终需要带来合格客户，而非仅增加访问量。",
+    "steps": [
+      "检查手机与桌面端的产品 CTA、联系入口、WhatsApp 和表单。",
+      "实际测试表单字段、邮件通知与成功反馈（使用测试数据）。",
+      "在 GA4 中确认关键事件不重复，并按自然搜索落地页分析转化。"
+    ],
+    "normal": "主要落地页有清晰的下一步路径，提交与统计均正常。",
+    "warning": "没有 GA4 或 CRM 数据不能推断 SEO 的实际商业回报。",
+    "fix": "改善 CTA 与表单流程，规范事件命名及去重。",
+    "verify": "测试提交成功并检查事件记录与询盘质量。"
+  },
+  {
+    "id": "issue",
+    "section": "report",
+    "title": "问题归档与整改验收",
+    "priority": "P1",
+    "duration": "10 分钟",
+    "tools": [
+      "Word/Markdown",
+      "GSC",
+      "Screaming Frog"
+    ],
+    "why": "让检查结果能够交接、复测和长期积累。",
+    "steps": [
+      "每条问题记录 URL、事实证据、影响、优先级、整改措施及负责人。",
+      "标记已确认 / 待核实，避免将工具警告直接写成故障。",
+      "整改后复爬，核对 GSC 和实际业务指标；记录验收日期。"
+    ],
+    "normal": "管理层报告简洁，技术问题有对应的可执行明细和复测结果。",
+    "warning": "不要把不同工具的告警数量简单相加，也不要把抽样结果写成全站定论。",
+    "fix": "将领导报告与技术问题清单分开，建立持续更新的案例库。",
+    "verify": "形成关闭记录与复盘。"
+  },
+  {
+    "id": "sf-setup",
+    "section": "spider",
+    "title": "开始抓取前的范围与设置",
+    "priority": "P1",
+    "duration": "8 分钟",
+    "tools": [
+      "Screaming Frog",
+      "项目需求"
+    ],
+    "why": "先锁定站点、子域名、爬虫模式和审计目的，避免截取无法复现的数据。",
+    "steps": [
+      "记录正式域名、检查日期、软件版本、目标语言与页面类型。",
+      "选择 Spider 模式，输入入口 URL；确认是否需要包含子域名、参数 URL、图片和外链。",
+      "默认先采用 Text Only 对原始 HTML 做基线抓取；动态站点另做 JavaScript 渲染对照。",
+      "确认 robots.txt 限制和用户代理；保存此次抓取设置、截图及原始导出。"
+    ],
+    "normal": "范围、模式、时间、入口和核心设置可以复现，报告明确抽样与全站抓取的区别。",
+    "warning": "抓取记录不等于已索引页面；遇到 0 状态码先看是否被 robots 阻止。不同版本菜单位置可能略有不同。",
+    "fix": "需要补查时按同样配置重新抓取，必要时另建一次专项抓取，不要混用统计口径。",
+    "verify": "保留软件版本、模式、抓取日期、入口 URL、配置摘要及导出文件。",
+    "example": "Roshan 的部分 /_next/ 资源在 Text Only 抓取里显示 Blocked by robots.txt，需结合渲染影响判断。",
+    "links": [
+      {
+        "label": "官方快速入门",
+        "url": "https://www.screamingfrog.co.uk/seo-spider/tutorials/quick-start-guide/"
+      }
+    ]
+  },
+  {
+    "id": "sf-dashboard",
+    "section": "spider",
+    "title": "读取 Dashboard 总览和 Issues",
+    "priority": "P1",
+    "duration": "6 分钟",
+    "tools": [
+      "Screaming Frog"
+    ],
+    "why": "快速查看规模和问题分类，但不要把警告数量直接当成全站故障率。",
+    "steps": [
+      "查看 Total URLs Crawled、Internal、External 以及 Issues / Warnings / Opportunities。",
+      "在 Issues 面板逐个选择关键问题，查看受影响 URL 明细和筛选范围。",
+      "优先定位重要 HTML 页面；将被 robots 屏蔽的图片、脚本资源单独分组。",
+      "记录问题名称、工具计数、证据状态与样本 URL。"
+    ],
+    "normal": "Dashboard 用于发现问题线索；结论最终落实到具体 URL 和可复核的证据。",
+    "warning": "同一 URL 可以触发多种警告；一个统计条目可能涉及多种资源，不可将 Issues 数量当成问题页面数量。",
+    "fix": "建立 P0/P1/P2 整改列表，先评估抓取、索引、内容可见性影响，再处理低风险格式提醒。",
+    "verify": "导出 Issues URL 列表，并随机复核高优先级样本。",
+    "example": "Roshan 总览显示多类 Canonical 与元数据问题，应先打开每项 URL 列表核对而非直接相加。",
+    "links": [
+      {
+        "label": "官方 Tabs 说明",
+        "url": "https://www.screamingfrog.co.uk/seo-spider/user-guide/tabs/"
+      }
+    ],
+    "screenshot": "assets/images/screaming-frog/dashboard.webp",
+    "caption": "示例：Roshan 抓取 Dashboard（历史案例；数字不代表当前状态）"
+  },
+  {
+    "id": "sf-html",
+    "section": "spider",
+    "title": "先筛选 HTML，再统计标题问题",
+    "priority": "P1",
+    "duration": "6 分钟",
+    "tools": [
+      "Screaming Frog"
+    ],
+    "why": "区分网页与 JPG、CSS、JS，否则会夸大缺少 Title、Description 和 H1 的页面数量。",
+    "steps": [
+      "进入 Internal 标签页，按 HTML 过滤，核对 Content Type 与 Indexability。",
+      "切换 Page Titles、Meta Description、H1、H2 专项面板。",
+      "查看 Missing、Duplicate、Multiple 等筛选结果；记录 URL、实际标签内容及状态。",
+      "对首页、分类、产品和文章页抽样核对网页可见内容。"
+    ],
+    "normal": "统计分母只使用适用的 HTML 页面，优先评估希望被索引的重要 URL。",
+    "warning": "Title 字数或 Description 长度只是优化线索；装饰性资源没有 H1 并不是网页故障。",
+    "fix": "为每一类页面设定清晰、唯一且有业务意义的主标题和描述；不要机械追求所有数字为零。",
+    "verify": "用相同筛选重新抓取，确认异常 URL 下降且页面内容仍正确。",
+    "example": "Roshan 多个产品页有 Product Detail 及产品名两个 H1，分类页面存在缺失 H1 的样本。",
+    "links": [
+      {
+        "label": "官方操作指南",
+        "url": "https://www.screamingfrog.co.uk/seo-spider/user-guide/"
+      }
+    ],
+    "screenshot": "assets/images/screaming-frog/h1.webp",
+    "caption": "示例：H1/H2 面板（H1-2 是第二个 H1，不是 H2）"
+  },
+  {
+    "id": "sf-status",
+    "section": "spider",
+    "title": "诊断 200 / 3xx / 4xx / 5xx 与 robots 屏蔽",
+    "priority": "P1",
+    "duration": "7 分钟",
+    "tools": [
+      "Screaming Frog",
+      "浏览器"
+    ],
+    "why": "区分真实 HTTP 响应、重定向与工具因 robots 限制造成的未抓取。",
+    "steps": [
+      "进入 Response Codes，按 Success、Redirection、Client Error、Server Error 和 Blocked 筛选。",
+      "查看源 URL、最终 URL、跳转链与内部来源链接。",
+      "确认返回码 0 的具体状态说明；核对 robots.txt 是否阻挡必要资源。",
+      "对首页、产品页及重要内部链接验证最终的 HTTP 状态。"
+    ],
+    "normal": "重要落地页稳定返回 200；旧地址按策略正确跳转；内部链接尽量直接指向最终 URL。",
+    "warning": "Status Code 0 + Blocked by Robots.txt 不等于服务器返回了 HTTP 0；不应盲目放开后台与隐私资源。",
+    "fix": "修复关键死链、错误跳转和影响渲染的资源限制，保留合理的后台爬虫屏蔽。",
+    "verify": "重新抓取关键 URL 与来源页，并通过浏览器或 HTTP 客户端核对。",
+    "example": "Next.js 的 /_next/ 静态资源是否应允许抓取，要以 Google 渲染和实际用途为依据。",
+    "links": [
+      {
+        "label": "官方抓取问题 FAQ",
+        "url": "https://www.screamingfrog.co.uk/seo-spider/faq/"
+      }
+    ]
+  },
+  {
+    "id": "sf-canonical",
+    "section": "spider",
+    "title": "核实 Canonical 与重定向一致性",
+    "priority": "P1",
+    "duration": "8 分钟",
+    "tools": [
+      "Screaming Frog",
+      "GSC"
+    ],
+    "why": "确认搜索引擎能获得一致的规范 URL 信号，避免把正常变体误判为错误。",
+    "steps": [
+      "进入 Canonicals，筛选 Missing、Canonicalised、Non-Indexable Canonical。",
+      "对照 Address、Canonical Link Element 1、Indexability Status。",
+      "逐个核查 Canonical 目标是否有效，是否与重定向、内部链接、Sitemap 使用同一正式域名。",
+      "在 GSC URL Inspection 对重要产品页核对 Google 选择的 Canonical。"
+    ],
+    "normal": "需要独立索引的正式页面通常声明自身最终有效 URL；有意合并的重复页可正确指向规范版本。",
+    "warning": "Canonicalised 并非天然故障；必须结合页面用途和目标 URL 可索引性判断。",
+    "fix": "统一 www / 非 www 等主机策略，消除不必要的跨域名或重定向目标冲突。",
+    "verify": "从样本 URL 验证跳转最终地址、canonical 目标、GSC 规范网址和 Sitemap 是否匹配。",
+    "example": "Roshan 的 www 产品页曾指向非 www Canonical，需要进一步核实目标 URL 的真实跳转。",
+    "links": [
+      {
+        "label": "Canonical Missing 官方说明",
+        "url": "https://www.screamingfrog.co.uk/seo-spider/issues/canonicals/canonical-missing/"
+      }
+    ],
+    "screenshot": "assets/images/screaming-frog/canonical.webp",
+    "caption": "示例：Canonical 面板；留意非 www 目标与 www 抓取 URL"
+  },
+  {
+    "id": "sf-js",
+    "section": "spider",
+    "title": "Next.js / JavaScript 网站双模式对照",
+    "priority": "P1",
+    "duration": "10 分钟",
+    "tools": [
+      "Screaming Frog（渲染功能）",
+      "GSC"
+    ],
+    "why": "动态渲染可能影响 H1、内链、Title 和 Canonical 的获取；必须分清原始源码与执行后的页面。",
+    "steps": [
+      "保存 Text Only 抓取作为原始 HTML 基线。",
+      "在支持 JavaScript 渲染的授权版本中，于 Config / Spider / Rendering 选择 JavaScript 并重新抓取。",
+      "对比原始和渲染后的标题、规范页、主要内容与内部链接。",
+      "检查 robots 规则是否阻挡必需 JS/CSS，再用 GSC URL Inspection 对照 Google 实际抓取。"
+    ],
+    "normal": "重要内容与规范信号在原始 HTML 就可取得，或至少经 Google 渲染后能稳定发现且不互相冲突。",
+    "warning": "JavaScript 渲染是软件付费版功能；Text Only 未检测到动态内容不等于 Google 一定无法发现。",
+    "fix": "优先在服务端提供稳定的 HTML SEO 元素，修复影响渲染的资源屏蔽与前后不一致。",
+    "verify": "同一批 URL 对照两种模式并在 GSC 检查最终结果。",
+    "example": "Roshan 页面显示 Next.js 特征，原始页面 Title/H1 与 Canonical 的输出需要专项验证。",
+    "links": [
+      {
+        "label": "官方 JS Canonical 对照",
+        "url": "https://www.screamingfrog.co.uk/seo-spider/issues/javascript/canonical-mismatch/"
+      },
+      {
+        "label": "软件功能与限制",
+        "url": "https://www.screamingfrog.co.uk/seo-spider/faq/"
+      }
+    ]
+  },
+  {
+    "id": "sf-links",
+    "section": "spider",
+    "title": "抓取深度、内部链接及参数 URL",
+    "priority": "P2",
+    "duration": "8 分钟",
+    "tools": [
+      "Screaming Frog"
+    ],
+    "why": "找出重要页面难以发现、内部链接弱或重复参数 URL 被过度抓取的情况。",
+    "steps": [
+      "在 Internal 中查看 Crawl Depth、Inlinks，并检查分类/文章/产品的访问路径。",
+      "查看 Inlinks / Outlinks，记录指向重要分类和产品页的上下文链接。",
+      "检查参数筛选页面是否产生重复 Title、Canonical 或大量不必要的索引 URL。",
+      "对关键页面取样确认手机端导航与链接能正常访问。"
+    ],
+    "normal": "重点页面有清晰导航与合理内部链接，参数页遵循明确索引策略。",
+    "warning": "抓取深度超过 3 不一定自动构成故障；链接数量多也不等于一定更好。",
+    "fix": "建立分类 → 产品 → 相关文章与案例的内容路径，并规范筛选 URL 的索引策略。",
+    "verify": "重新抓取比较 Inlinks、Crawl Depth、有效 URL 与内部链接来源。",
+    "example": "Roshan Showcase 存在 query 参数筛选页，适合检查索引策略和重复路径。",
+    "links": [
+      {
+        "label": "官方内链专项指南",
+        "url": "https://www.screamingfrog.co.uk/seo-spider/tutorials/internal-linking-audit-with-the-seo-spider/"
+      }
+    ]
+  },
+  {
+    "id": "sf-export",
+    "section": "spider",
+    "title": "导出证据及形成整改清单",
+    "priority": "P1",
+    "duration": "8 分钟",
+    "tools": [
+      "Screaming Frog",
+      "表格工具"
+    ],
+    "why": "把工具截图变成可复查的 URL 级审计证据，支持领导报告与整改验收。",
+    "steps": [
+      "先保存完整 Crawl 数据，记录软件版本、日期和抓取配置。",
+      "在 Internal → HTML 导出主要网页数据；分别导出 Canonicals、H1、Meta Description 与 Response Codes 的相关筛选。",
+      "为高优先级问题添加样本 URL、截图、事实、可能影响、建议动作、责任人与验收标准。",
+      "完成整改后在相同条件下重新抓取，并对比修复前后。"
+    ],
+    "normal": "每个问题都有原始 URL 证据与复核方法；领导报告只保留主要问题和优先级。",
+    "warning": "不同筛选结果可能重叠；未经核对不可把单次抓取结果解释为 Google 收录或排名变化原因。",
+    "fix": "将明细放入 CSV / XLSX，将决策信息写进 Word 或 Markdown 报告；维护同一问题 ID。",
+    "verify": "复查状态码、重要页面索引意图、具体标签、浏览器可用性与 GSC 结果。",
+    "example": "前面 Evodek 和 Roshan 的 Dashboard、H1 和 Canonical 截图可作为流程案例，而非最终问题数量。",
+    "links": [
+      {
+        "label": "官方导出和保存指南",
+        "url": "https://www.screamingfrog.co.uk/seo-spider/user-guide/general/"
+      }
+    ]
+  }
+]

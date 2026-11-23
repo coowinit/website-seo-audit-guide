@@ -1,0 +1,62 @@
+[
+  {
+    "id": "start",
+    "name": "快速开始",
+    "description": "明确审计范围、证据和报告方式",
+    "icon": "compass"
+  },
+  {
+    "id": "foundation",
+    "name": "01 · 网站基础",
+    "description": "访问、域名、robots、Sitemap",
+    "icon": "globe"
+  },
+  {
+    "id": "indexing",
+    "name": "02 · 抓取与索引",
+    "description": "状态码、Canonical、索引、渲染",
+    "icon": "scan"
+  },
+  {
+    "id": "onpage",
+    "name": "03 · 页面 SEO",
+    "description": "标题、描述、H1/H2、图片",
+    "icon": "tags"
+  },
+  {
+    "id": "performance",
+    "name": "04 · 网站性能",
+    "description": "PageSpeed、CWV、图片加载",
+    "icon": "gauge"
+  },
+  {
+    "id": "content",
+    "name": "05 · 内容与关键词",
+    "description": "搜索意图、内容集群、内链",
+    "icon": "book"
+  },
+  {
+    "id": "competition",
+    "name": "06 · 外链与竞争",
+    "description": "外链质量与竞争差距",
+    "icon": "link"
+  },
+  {
+    "id": "conversion",
+    "name": "07 · 转化与体验",
+    "description": "表单、询盘、GA4",
+    "icon": "target"
+  },
+  {
+    "id": "report",
+    "name": "08 · 报告与验收",
+    "description": "证据、优先级、验收",
+    "icon": "clipboard"
+  },
+  {
+    "id": "spider",
+    "name": "09 · Screaming Frog 实战",
+    "description": "抓取配置、Dashboard、专项报表与证据导出",
+    "icon": "scan-search"
+  }
+]
