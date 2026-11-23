@@ -23,12 +23,12 @@ python -m http.server 8000
 
 ## GitHub Pages 发布
 
-1. 新建公开仓库 `website-seo-audit-guide`，上传整个项目。
+1. 项目已托管于公开仓库 `coowinit/website-seo-audit-guide`；后续更新提交至 `main`。
 2. 在仓库 Settings → Pages → Build and deployment 中选择 Deploy from a branch。
 3. 选择 `main` 分支和 `/ (root)`，保存。
 4. 访问 `https://<你的用户名>.github.io/website-seo-audit-guide/`。
 
-注意：页面中的 GitHub 图标初始指向 GitHub 首页；仓库创建后请将 `index.html` 中的 URL 换成你的仓库地址。
+项目仓库：https://github.com/coowinit/website-seo-audit-guide/ 。页面右上角的 GitHub 图标已指向本仓库。
 
 ## 目录
 
